@@ -1,0 +1,180 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet"  type="text/css" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2> REGISTRATION FORM</h2>
+        </div>
+        <form class="form" id="form">
+            <div class="form-control">
+                <label > Username </label>
+                <input type="text" name="" id="username" placeholder="Enter your full name" autocomplete="off">
+                <i class="fa fa-check-circle-o" aria-hidden="true"></i>
+                <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                <small> Error Msg </small>
+            </div>
+            <div class="form-control">
+                <label > Email </label>
+                <input type="email" name="" id="email" placeholder="Enter your Email" autocomplete="off">
+                <i class="fa fa-check-circle-o" aria-hidden="true"></i>
+                <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                <small> Error Msg </small>
+            </div>
+            <div class="form-control">
+                <label > Phone Number </label>
+                <input type="number" name="" id="phone" placeholder="Enter your phone number" autocomplete="off">
+                <i class="fa fa-check-circle-o" aria-hidden="true"></i>
+                <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                <small> Error Msg </small>
+            </div>
+            <div class="form-control">
+                <label > Password </label>
+                <input type="password" name="" id="password" placeholder="Enter your Password" autocomplete="off">
+                <i class="fa fa-check-circle-o" aria-hidden="true"></i>
+                <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                <small> Error Msg </small>
+            </div>
+            <div class="form-control">
+                <label > Confirm Password</label>
+                <input type="password" name="" id="cpassword" placeholder="Enter your Password again" autocomplete="off">
+                <i class="fa fa-check-circle-o" aria-hidden="true"></i>
+                <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                <small> Error Msg </small>
+            </div>
+            <input type="submit" value="Submit" class="btn">
+        </form>
+    </div>
+    <!-- go to cdn of sweet alert -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script> 
+    <script type="text/javascript"> 
+    const form = document.getElementById('form');
+    const username = document.getElementById('username');
+    const email = document.getElementById('email');
+    const phone = document.getElementById('phone');
+    const password = document.getElementById('password');
+    const cpassword = document.getElementById('cpassword');
+
+    //add event 
+    form.addEventListener('submit', (event)=>{
+        event.preventDefault();
+        validate();
+    })
+
+    const sendData = (usernameVal,sRate, count) => {
+        if (sRate ===count){
+            alert ('registration successfull');
+            swal("Welcome! " + usernameVal, "Registration Successful", "success");//added from sweet alert
+            // location.href = `demo.html?username=${usernameVal}`
+            
+        }
+    }
+
+    //sending data to database 
+    //more email validate
+    ////we are defining it here as it is arrow function so arrow funct is strictly declared before calling it
+    const successMsg =(usernameVal) =>{
+        let formCon = document.getElementsByClassName('form-control');
+        var count = formCon.length - 1;
+        for (var i=0; i< formCon.length; i++){
+            if(formCon[i].className==="form-control success"){
+                var sRate = 0 + i;//counting kr rhe ki pancho hmare success hone chahiye issilye count kr rhe 
+                sendData(usernameVal,sRate, count);
+            }else{
+                return false;
+            }
+        }
+    }
+    const isEmail=(emailVal) => {
+        var atSymbol = emailVal.indexOf("@");
+        if (atSymbol < 1)return false;
+        var dot = emailVal.lastIndexOf('.');
+        if(dot <= atSymbol +3)return false;
+        if(dot === emailVal.length-1)return false;
+        return true;
+
+    }
+    const validate=() =>{
+        const usernameVal = username.value.trim();//trim is used to remove extra space in front and back 
+        const emailVal = email.value.trim();
+        const phoneVal = phone.value.trim();
+        const passwordVal = password.value.trim();
+        const cpasswordVal = cpassword.value.trim();
+        //validate username
+        if(usernameVal === ""){
+            setErrorMsg(username,'username cannot be blank');
+        }else if(usernameVal.length <=2){
+            setErrorMsg(username,'username min 3 char');
+        }else{
+            setSuccessMsg(username);
+        }
+        //validate email
+        if(emailVal === ""){
+            setErrorMsg(email,'email cannot be blank');
+        }else if(!isEmail(emailVal)){
+            setErrorMsg(email,'Not a valid Email');
+        }else{
+            setSuccessMsg(email);
+        }
+
+        //validate phone 
+        if(phoneVal === ""){
+            setErrorMsg(phone,'phone cannot be blank');
+        }else if(phoneVal.length !=10){
+            setErrorMsg(phone,'min 10 digits are required');
+        }else{
+            setSuccessMsg(phone);
+        }
+
+        //validate password
+        if(passwordVal === ""){
+            setErrorMsg(password,'password cannot be blank');
+        }else if(passwordVal.length <=5){
+            setErrorMsg(password,'minimum 6 character');
+        }else{
+            setSuccessMsg(password);
+        }
+        
+        //validate password
+        if(cpasswordVal === ""){
+            setErrorMsg(cpassword,' confirm password cannot be blank');
+        }else if(cpasswordVal !=passwordVal){
+            setErrorMsg(cpassword,'password not matching ');
+        }else{
+            setSuccessMsg(cpassword);
+        }
+
+        successMsg(usernameVal);
+    }
+
+        function setErrorMsg(input, errormsgs){
+            const formControl = input.parentElement;//accessing parent div
+            const small = formControl.querySelector('small');//inside that div selecting small tag
+            formControl.className = "form-control error";//it is adding a class in parent div named as error so that error in css gets activated 
+            //that is if error ocurrs then our parent div would be like
+            //<div class="form-control error">
+            small.innerText = errormsgs;//changing the inner text
+        }
+        function setSuccessMsg(input){
+            const formControl = input.parentElement;//accessing parent div
+            formControl.className = "form-control success";//it is adding a class in parent div named as error so that error in css gets activated 
+            //that is if error ocurrs then our parent div would be like
+            //<div class="form-control error">
+            
+        }
+        
+
+
+    
+
+    </script>
+
+    
+</body>
+</html>
